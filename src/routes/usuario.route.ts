@@ -8,6 +8,7 @@ import { Router } from "express";
 import { crearUsuario } from "../controllers/usuario.controller";
 import { check } from "express-validator";
 import { validateFields } from "../middlewares/validate-fields";
+import { validateJWT } from "../middlewares/validate-jwt";
 
 //path /api/v1/usuario
 
@@ -28,7 +29,7 @@ router.post(
   ],
   crearUsuario
 );
-router.get("/", getUsuarios);
+router.get("/", validateJWT, getUsuarios);
 router.get("/:id", getUnUsuario);
 router.put("/:id", updateUsuario);
 
