@@ -30,9 +30,9 @@ router.post(
   crearUsuario
 );
 router.get("/", validateJWT, getUsuarios);
-router.get("/:id", getUnUsuario);
-router.put("/:id", updateUsuario);
+router.get("/:id", validateJWT, getUnUsuario);
+router.put("/:id", validateJWT, updateUsuario);
 
-router.delete("/:id", eliminarUsuario);
+router.delete("/:id", validateJWT, eliminarUsuario);
 
 export default router;
