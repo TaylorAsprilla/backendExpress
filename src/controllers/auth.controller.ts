@@ -8,6 +8,9 @@ import { Request, Response } from "express";
 import UsuarioModel from "../models/usuario.model";
 import generateJWT from "../helpers/jwt";
 import { CustomRequest } from "../middlewares/validate-jwt";
+import sendEmail from "../helpers/email";
+import path from "path";
+import fs from "fs";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -76,11 +79,33 @@ export const olvidoContrasena = async (req: Request, resp: Response) => {
         process.env.JWT_SECRET_PASS
       );
 
+      // Guardar el Token
+      existeUsuario.token = token;
+      await existeUsuario.save();
+
+      const nombre = existeUsuario.nombre;
+
+      const templatePath = path.join(
+        __dirname,
+        "../templates/olvidoContrasena.html"
+      );
+
+      const emailTemplate = fs.readFileSync(templatePath, "utf8");
+
+      const personalizarEmail = emailTemplate
+        .replace("{{name}}", nombre)
+        .replace("{{token}}", existeUsuario.token);
+
+      sendEmail(
+        "taylor.asprilla@gmail.com",
+        "Cambio de contraseña",
+        personalizarEmail
+      );
+
       resp.status(200).json({
         ok: true,
         msg: "Proceso éxitoso",
         usuario: existeUsuario,
-        token,
       });
     }
   } catch (error) {
@@ -95,36 +120,50 @@ export const olvidoContrasena = async (req: Request, resp: Response) => {
 export const cambioContrasena = async (req: CustomRequest, res: Response) => {
   const id = req._id;
   const { password } = req.body;
+  const tokenPass = req.header("x-token-pass") as string;
 
   try {
-    if (!password) {
-      res.status(400).json({
+    if (!password || !tokenPass) {
+      return res.status(400).json({
         ok: false,
-        msg: "Por favor dígite una contraseña válida",
+        msg: "Valores invalidos",
+      });
+    }
+
+    const usuario = await UsuarioModel.findOne({ token: tokenPass });
+
+    if (!usuario) {
+      return res.status(400).json({
+        ok: false,
+        msg: "El token ya fue utilizado",
       });
     }
 
     const newPassword = bcrypt.hashSync(password, 10);
 
-    const actualizarPassword = await UsuarioModel.findByIdAndUpdate({
-      _id: id,
-      password: newPassword,
-    });
+    const actualizarPassword = await UsuarioModel.findByIdAndUpdate(
+      id,
+      {
+        password: newPassword,
+        token: "",
+      },
+      { new: true }
+    );
 
     if (!actualizarPassword) {
-      res.status(400).json({
+      return res.status(400).json({
         ok: false,
         msg: "Error al actualizar la contraseña",
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       ok: true,
       msg: "Contraseña actualizada",
     });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
+    return res.status(400).json({
       ok: false,
       msg: "Error al actualizar la contraseña, hable con el administrador",
     });

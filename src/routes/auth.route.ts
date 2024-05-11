@@ -8,7 +8,7 @@ import {
   login,
   olvidoContrasena,
 } from "../controllers/auth.controller";
-import { validateJWT } from "../middlewares/validate-jwt";
+import { validateJWT, validateJWTPass } from "../middlewares/validate-jwt";
 
 const router = Router();
 
@@ -34,11 +34,13 @@ router.post(
   olvidoContrasena
 );
 
-//TODO implementar el validateJWTPass
 router.put(
   "/cambiocontrasena",
-
-  [check("password", "El password es obligatorio").not().isEmpty()],
+  validateJWTPass,
+  [
+    check("password", "El password es obligatorio").not().isEmpty(),
+    validateFields,
+  ],
   cambioContrasena
 );
 
