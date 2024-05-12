@@ -97,7 +97,7 @@ export const olvidoContrasena = async (req: Request, resp: Response) => {
         .replace("{{token}}", existeUsuario.token);
 
       sendEmail(
-        "taylor.asprilla@gmail.com",
+        "fefyasilta@gufum.com",
         "Cambio de contraseña",
         personalizarEmail
       );
