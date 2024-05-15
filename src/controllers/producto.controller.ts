@@ -35,6 +35,7 @@ export const getProductos = async (req: Request, res: Response) => {
       productos,
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       ok: false,
       msg: "Error al consultar los productos",

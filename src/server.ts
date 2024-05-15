@@ -4,6 +4,7 @@ import cors from "cors";
 import usuarioRoutes from "./routes/usuario.route";
 import productoRoutes from "./routes/producto.route";
 import authRoutes from "./routes/auth.route";
+import interactionRoutes from "./routes/interaction.route";
 
 class Server {
   private app: Application;
@@ -12,6 +13,7 @@ class Server {
     usuario: "/api/v1/usuario",
     producto: "/api/v1/producto",
     login: "/api/v1/login",
+    interaction: "/api/v1/interaction",
   };
 
   constructor() {
@@ -47,6 +49,7 @@ class Server {
     this.app.use(this.apiPaths.usuario, usuarioRoutes);
     this.app.use(this.apiPaths.producto, productoRoutes);
     this.app.use(this.apiPaths.login, authRoutes);
+    this.app.use(this.apiPaths.interaction, interactionRoutes);
   }
 
   listen(): void {
