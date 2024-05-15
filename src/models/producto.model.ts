@@ -1,6 +1,30 @@
-import { Model, Schema, model } from "mongoose";
+import { Model, Schema, Types, model } from "mongoose";
 
-const ProductoSchema = new Schema({
+interface Distribuidor {
+  nit: string;
+  razonSocial: string;
+  telefono: number;
+  direccion: string;
+}
+
+interface Opiniones {
+  comentarios: string;
+  calificacion: number;
+  fecha?: Date;
+}
+
+interface ProductoInterface {
+  nombre: string;
+  sku: string;
+  cantidad: number;
+  precio: number;
+  distribuidor: Distribuidor;
+  opiniones: Opiniones;
+  createdAt: Date;
+  usuario: Types.ObjectId;
+}
+
+const ProductoSchema = new Schema<ProductoInterface>({
   nombre: {
     type: String,
     required: true,
@@ -12,11 +36,17 @@ const ProductoSchema = new Schema({
   },
   cantidad: { type: Number, required: true },
   precio: { type: Number, required: true },
+  distribuidor: { type: Object, required: true },
+  opiniones: { type: Object },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
+  usuario: { type: Schema.Types.ObjectId, ref: "usuario", required: true },
 });
 
-const ProductoModel: Model<any> = model("productos", ProductoSchema);
+const ProductoModel: Model<ProductoInterface> = model<ProductoInterface>(
+  "productos",
+  ProductoSchema
+);
 export default ProductoModel;

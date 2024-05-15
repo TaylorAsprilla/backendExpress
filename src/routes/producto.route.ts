@@ -10,11 +10,13 @@ import {
 } from "../controllers/producto.controller";
 import { check } from "express-validator";
 import { validateFields } from "../middlewares/validate-fields";
+import { validateJWT } from "../middlewares/validate-jwt";
 
 const router = Router();
 
 router.post(
   "/",
+  validateJWT,
   [
     check("nombre", "El nombre del producto es obligatorio").not().isEmpty(),
     check("sku", "El SKU del producto es obligatorio").not().isEmpty(),
