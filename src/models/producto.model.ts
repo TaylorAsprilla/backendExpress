@@ -46,7 +46,7 @@ const ProductoSchema = new Schema<ProductoInterface>({
 });
 
 const ProductoModel: Model<ProductoInterface> = model<ProductoInterface>(
-  "productos",
+  "producto",
   ProductoSchema
 );
 export default ProductoModel;

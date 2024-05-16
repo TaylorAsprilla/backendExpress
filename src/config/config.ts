@@ -14,6 +14,8 @@ export const config: any = {
     },
     jwtSecret: process.env.JWTSECRET,
     jwtSecretPass: process.env.JWT_SECRET_PASS,
+    ipApi: process.env.IP_API,
+    ip: process.env.IP,
   },
   pruebas: {
     database: {
@@ -28,6 +30,7 @@ export const config: any = {
     },
     jwtSecret: process.env.JWTSECRET,
     jwtSecretPass: process.env.JWT_SECRET_PASS,
+    ipApi: process.env.IP_API,
   },
 
   //TODO Configurar cuando se realice el despliegue
@@ -43,5 +46,6 @@ export const config: any = {
     },
     jwtSecret: process.env.JWTSECRET,
     jwtSecretPass: process.env.JWT_SECRET_PASS,
+    ipApi: process.env.IP_API,
   },
 };

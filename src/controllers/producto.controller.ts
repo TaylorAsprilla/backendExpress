@@ -28,7 +28,10 @@ export const crearProducto = async (req: CustomRequest, res: Response) => {
 
 export const getProductos = async (req: Request, res: Response) => {
   try {
-    const productos = await ProductoModel.find();
+    const productos = await ProductoModel.find().populate({
+      path: "usuario",
+      select: "nombre email numeroCelular",
+    });
 
     res.json({
       ok: true,
