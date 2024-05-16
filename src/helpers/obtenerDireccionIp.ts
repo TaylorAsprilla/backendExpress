@@ -16,7 +16,7 @@ export const obtenerUbicacionPorIP = async (
         "La solicitud a la API no fue exitosa: " + response.data.message
       );
     }
-    console.log("respuesta de la IP", response.data);
+
     return response.data;
   } catch (error) {
     console.error("Error al obtener la ubicación por IP", error);
