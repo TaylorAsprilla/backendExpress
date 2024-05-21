@@ -29,7 +29,7 @@ router.post(
   ],
   crearUsuario
 );
-router.get("/", validateJWT, getUsuarios);
+router.get("/", getUsuarios);
 router.get("/:id", validateJWT, getUnUsuario);
 router.put("/:id", validateJWT, updateUsuario);
 
