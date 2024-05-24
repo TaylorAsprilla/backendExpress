@@ -1,8 +1,3 @@
-// 1. Solicitar datos email y contraseña
-// 2. Validar Contraseña
-// 3. Generar el Token
-// 4. Login Exitoso
-
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import UsuarioModel from "../models/usuario.model";
@@ -61,6 +56,33 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (error) {
     res.status(400).json({
+      ok: false,
+      error,
+      msg: "Hable con el administrador",
+    });
+  }
+};
+
+export const renewToken = async (req: CustomRequest, res: Response) => {
+  const id = req._id;
+
+  try {
+    if (typeof id === "undefined") {
+      throw new Error("No existe el ID");
+    }
+
+    const usuario = await UsuarioModel.findById(id);
+    // Generar el Token
+    const token = await generateJWT(id.toString());
+
+    res.json({
+      ok: true,
+      token,
+      usuario,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({
       ok: false,
       error,
       msg: "Hable con el administrador",

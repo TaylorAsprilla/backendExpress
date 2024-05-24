@@ -7,6 +7,7 @@ import {
   cambioContrasena,
   login,
   olvidoContrasena,
+  renewToken,
 } from "../controllers/auth.controller";
 import { validateJWT, validateJWTPass } from "../middlewares/validate-jwt";
 
@@ -43,5 +44,7 @@ router.put(
   ],
   cambioContrasena
 );
+
+router.get("/", validateJWT, renewToken);
 
 export default router;
