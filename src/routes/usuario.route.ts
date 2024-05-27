@@ -16,6 +16,7 @@ const router = Router();
 
 router.post(
   "/",
+  validateJWT,
   [
     check("nombre", "El nombre es obligatorio").not().isEmpty(),
     check("numeroDocumento", "El número de documento es obligatorio")
@@ -29,7 +30,7 @@ router.post(
   ],
   crearUsuario
 );
-router.get("/", getUsuarios);
+router.get("/", validateJWT, getUsuarios);
 router.get("/:id", validateJWT, getUnUsuario);
 router.put("/:id", validateJWT, updateUsuario);
 
