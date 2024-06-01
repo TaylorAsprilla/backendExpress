@@ -5,6 +5,7 @@ import usuarioRoutes from "./routes/usuario.route";
 import productoRoutes from "./routes/producto.route";
 import authRoutes from "./routes/auth.route";
 import interactionRoutes from "./routes/interaction.route";
+import paisRoutes from "./routes/pais.route";
 
 class Server {
   private app: Application;
@@ -14,6 +15,7 @@ class Server {
     producto: "/api/v1/producto",
     login: "/api/v1/login",
     interaction: "/api/v1/interaction",
+    pais: "/api/v1/pais",
   };
 
   constructor() {
@@ -50,6 +52,7 @@ class Server {
     this.app.use(this.apiPaths.producto, productoRoutes);
     this.app.use(this.apiPaths.login, authRoutes);
     this.app.use(this.apiPaths.interaction, interactionRoutes);
+    this.app.use(this.apiPaths.pais, paisRoutes);
   }
 
   listen(): void {
