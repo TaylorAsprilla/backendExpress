@@ -11,9 +11,10 @@ import { config } from "../config/config";
 import UbicacionModel from "../models/ubicacionIp.model";
 
 const environment = config[process.env.NODE_ENV || "desarrollo"];
+const IP: string = process.env.IP || "";
 
 export const login = async (req: Request, res: Response) => {
-  const ipAddress = environment.ip || req.ip;
+  const ipAddress = IP || req.ip;
   const { email, password } = req.body;
 
   try {
@@ -38,16 +39,17 @@ export const login = async (req: Request, res: Response) => {
 
     // Generar Token
     const token = await generateJWT(usuario._id, usuario.email);
+    let ubicacionGuardada;
+    if (ipAddress) {
+      const ubicacionIp = await obtenerUbicacionPorIP(ipAddress);
 
-    const ubicacionIp = await obtenerUbicacionPorIP(ipAddress);
+      const ubicacion = new UbicacionModel({
+        usuario: usuario.id,
+        ...ubicacionIp,
+      });
 
-    const ubicacion = new UbicacionModel({
-      usuario: usuario.id,
-      ...ubicacionIp,
-    });
-
-    const ubicacionGuardada = await ubicacion.save();
-
+      ubicacionGuardada = await ubicacion.save();
+    }
     res.status(200).json({
       ok: true,
       usuario,
